@@ -20,14 +20,15 @@ bytesize = 8)
 port.setDTR(False) # Drop DTR
 port.setDTR(True)  # UP the DTR back
 
-print(port.readline())
-port.write(b"read 0 7FF\n")
-
 f = open(filename, "wb")
 
+print(port.readline().decode("utf-8"))
+port.write(b"read 0 7FF\n")
+
+# Echo
 line = port.readline()
+# Data
 line = port.readline()
-print(line)
 bytelist=line.decode("utf-8").strip().split(' ')
 
 i = 0
