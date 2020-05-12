@@ -1,3 +1,9 @@
+/*
+ * 95160 EEPROM Manager
+ * 2020 Cedric PAILLE
+ *
+ */
+
 #pragma once
 #include "io.h"
 

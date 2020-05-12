@@ -1,3 +1,9 @@
+/*
+ * 95160 EEPROM Manager
+ * 2020 Cedric PAILLE
+ *
+ */
+
 #include "eeprom.h"
 
 #define EEPROM_WR_ENABLE 		0b00000110
@@ -25,8 +31,8 @@ EEPROM_95160::EEPROM_95160(int s, int d, int q, int c, int w, int h) :
 	w_pin(w, DigitalPin::MODE_OUTPUT),
 	hold_pin(h, DigitalPin::MODE_OUTPUT)
 {
-	clock_pin.set(0);
-	hold_pin.set(1);
+	clock_pin.set_fast(0);
+	hold_pin.set_fast(1);
 	unselect_chip();
 	we_chip(false);
 }
@@ -34,38 +40,38 @@ EEPROM_95160::EEPROM_95160(int s, int d, int q, int c, int w, int h) :
 void
 EEPROM_95160::select_chip()
 {
-	s_pin.set(0);
+	s_pin.set_fast(0);
 }
 
 void
 EEPROM_95160::we_chip(bool e)
 {
-	w_pin.set(!e);
+	w_pin.set_fast(!e);
 }
 
 void
 EEPROM_95160::unselect_chip()
 {
-	s_pin.set(1);
+	s_pin.set_fast(1);
 }
 void
 EEPROM_95160::send_data8(const uint8_t command){
 	for (int i = 0; i < 8; ++i){
 		char out = (command >> (7-i)) & 0x1;
-		d_pin.set(out);
-		clock_pin.set(1);
-		clock_pin.set(0);
+		d_pin.set_fast(out);
+		clock_pin.set_fast(1);
+		clock_pin.set_fast(0);
 	}
-	d_pin.set(0);
+	d_pin.set_fast(0);
 }
 
 uint8_t
 EEPROM_95160::read_data8(){
 	uint8_t in = 0;
 	for (int i = 0; i < 8; ++i){
-		clock_pin.set(1);
+		clock_pin.set_fast(1);
 		uint8_t bit = q_pin.get();
-		clock_pin.set(0);
+		clock_pin.set_fast(0);
 		in |= bit << (7-i);
 	}
 	return in;

@@ -29,9 +29,27 @@ line = port.readline()
 line = port.readline()
 print(line)
 bytelist=line.decode("utf-8").strip().split(' ')
-print (bytelist)
+
+i = 0
+addr = 0
+line = ""
 for h in bytelist:
+  if i == 0:
+    sys.stdout.write(hex(addr).zfill(5) + " : ")
+  code = int(h, 16)
+  if code > 32 and code < 126:
+    line += code.to_bytes(1, "big").decode("ascii")
+  else:
+    line += "."
+  sys.stdout.write(h.zfill(2) + " ")
   b = bytes.fromhex(h.zfill(2))
   f.write(b)
+  i+=1
+  addr+=1
+  if i == 16:
+    sys.stdout.write(" " + line)
+    sys.stdout.write("\n")
+    line = ""
+    i = 0
   
 f.close()

@@ -26,7 +26,7 @@ f = open(filename, "rb")
 for i in range(0, 0x800):
   b = f.read(1)
   data = hex(i)[2:] + " " + b.hex()
-  print("Writing : " + data)
+  sys.stdout.write("Writing : " + data + "\r")
   port.write(b"write " + str.encode(data) + b"\n")
   ret = ""
   while(1):
@@ -34,8 +34,10 @@ for i in range(0, 0x800):
     ret += char
     if char == ">":
       break
-  print(ret)
   if "ERROR" in ret:
     print("Error detected : " + ret)
     break
+    
+f.close()
+print("EEPROM write done")
 
