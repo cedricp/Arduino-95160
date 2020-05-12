@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "eeprom.h"
 
 #define EEPROM_WR_ENABLE 		0b00000110
@@ -18,21 +17,16 @@
 // C Clock
 
 
-EEPROM_95160::EEPROM_95160(int s, int d, int q, int c, int w, int h){
-	select_pin = s;
-	d_pin = d;
-	q_pin = q;
-	clock_pin = c;
-	w_pin = w;
-	hold_pin = h;
-	pinMode(select_pin, OUTPUT);
-	pinMode(clock_pin, OUTPUT);
-	pinMode(q_pin, INPUT);
-	pinMode(d_pin, OUTPUT);
-	pinMode(w_pin, OUTPUT);
-	pinMode(hold_pin, OUTPUT);
-	digitalWrite(clock_pin, 0);
-	digitalWrite(hold_pin, 1);
+EEPROM_95160::EEPROM_95160(int s, int d, int q, int c, int w, int h) :
+	s_pin(s, DigitalPin::MODE_OUTPUT),
+	d_pin(d, DigitalPin::MODE_OUTPUT),
+	q_pin(q, DigitalPin::MODE_INPUT),
+	clock_pin(c, DigitalPin::MODE_OUTPUT),
+	w_pin(w, DigitalPin::MODE_OUTPUT),
+	hold_pin(h, DigitalPin::MODE_OUTPUT)
+{
+	clock_pin.set(0);
+	hold_pin.set(1);
 	unselect_chip();
 	we_chip(false);
 }
@@ -40,38 +34,38 @@ EEPROM_95160::EEPROM_95160(int s, int d, int q, int c, int w, int h){
 void
 EEPROM_95160::select_chip()
 {
-	digitalWrite(select_pin, 0);
+	s_pin.set(0);
 }
 
 void
 EEPROM_95160::we_chip(bool e)
 {
-	digitalWrite(w_pin, !e);
+	w_pin.set(!e);
 }
 
 void
 EEPROM_95160::unselect_chip()
 {
-	digitalWrite(select_pin, 1);
+	s_pin.set(1);
 }
 void
 EEPROM_95160::send_data8(const uint8_t command){
 	for (int i = 0; i < 8; ++i){
 		char out = (command >> (7-i)) & 0x1;
-		digitalWrite(d_pin, out);
-		digitalWrite(clock_pin, 1);
-		digitalWrite(clock_pin, 0);
+		d_pin.set(out);
+		clock_pin.set(1);
+		clock_pin.set(0);
 	}
-	digitalWrite(d_pin, 0);
+	d_pin.set(0);
 }
 
 uint8_t
 EEPROM_95160::read_data8(){
 	uint8_t in = 0;
 	for (int i = 0; i < 8; ++i){
-		digitalWrite(clock_pin, 1);
-		uint8_t bit = digitalRead(q_pin);
-		digitalWrite(clock_pin, 0);
+		clock_pin.set(1);
+		uint8_t bit = q_pin.get();
+		clock_pin.set(0);
 		in |= bit << (7-i);
 	}
 	return in;

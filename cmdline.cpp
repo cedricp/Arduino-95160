@@ -56,7 +56,7 @@ int cmd_status()
 int cmd_protect()
 {
 	if (g_arg_count != 1){
-		Serial.println("Invalid argument count.");
+		Serial.println("ERROR: Invalid argument count.");
 		return -1;
 	}
 	uint8_t arg = atoi(g_args[1]);
@@ -71,27 +71,27 @@ int cmd_read()
 {
 	char * ascii = "....................";
 	if (g_arg_count != 3){
-		Serial.println("Invalid argument count.");
+		Serial.println("ERROR: Invalid argument count.");
 		return -1;
 	}
 	uint16_t mem_begin = StrToHex(g_args[1]);
 	if (errno != 0){
-		Serial.println("Invalid argument 1.");
+		Serial.println("ERROR: Invalid argument 1.");
 		return -1;
 	}
 	uint16_t mem_end = StrToHex(g_args[2]);
 	if (errno != 0){
-		Serial.println("Invalid argument 2.");
+		Serial.println("ERROR: Invalid argument 2.");
 		return -1;
 	}
 
 	if (mem_begin > 0x7ff){
-		Serial.println("Invalid memory address.");
+		Serial.println("ERROR: Invalid memory address.");
 		return -1;
 	}
 
 	if (mem_end > 0x7ff){
-		Serial.println("Invalid size (overflow).");
+		Serial.println("ERROR: Invalid size (overflow).");
 		return -1;
 	}
 
@@ -124,27 +124,27 @@ int cmd_read()
 int cmd_read2()
 {
 	if (g_arg_count != 3){
-		Serial.println("Invalid argument count.");
+		Serial.println("ERROR: Invalid argument count.");
 		return -1;
 	}
 	uint16_t mem_begin = StrToHex(g_args[1]);
 	if (errno != 0){
-		Serial.println("Invalid argument 1.");
+		Serial.println("ERROR: Invalid argument 1.");
 		return -1;
 	}
 	uint16_t mem_end = StrToHex(g_args[2]);
 	if (errno != 0){
-		Serial.println("Invalid argument 2.");
+		Serial.println("ERROR: Invalid argument 2.");
 		return -1;
 	}
 
 	if (mem_begin > 0x7ff){
-		Serial.println("Invalid memory address.");
+		Serial.println("ERROR: Invalid memory address.");
 		return -1;
 	}
 
 	if (mem_end > 0x7ff){
-		Serial.println("Invalid size (overflow).");
+		Serial.println("ERROR: Invalid size (overflow).");
 		return -1;
 	}
 
@@ -160,22 +160,22 @@ int cmd_read2()
 int cmd_write()
 {
 	if (g_arg_count != 3){
-		Serial.println("Invalid argument count.");
+		Serial.println("ERROR: Invalid argument count.");
 		return -1;
 	}
 	uint16_t mem_address = StrToHex(g_args[1]);
 	if (errno != 0){
-		Serial.println("Invalid argument 1.");
+		Serial.println("ERROR: Invalid argument 1.");
 		return -1;
 	}
 	uint8_t data = StrToHex(g_args[2]);
 	if (errno != 0){
-		Serial.println("Invalid argument 2.");
+		Serial.println("ERROR: Invalid argument 2.");
 		return -1;
 	}
 
 	if (mem_address > 0x7ff){
-		Serial.println("Invalid memory address.");
+		Serial.println("ERROR: Invalid memory address.");
 		return -1;
 	}
 	eeprom.write(mem_address, data);
@@ -185,32 +185,32 @@ int cmd_write()
 int cmd_fill()
 {
 	if (g_arg_count != 4){
-		Serial.println("Invalid argument count.");
+		Serial.println("ERROR: Invalid argument count.");
 		return -1;
 	}
 	uint16_t mem_begin = StrToHex(g_args[1]);
 	if (errno != 0){
-		Serial.println("Invalid argument 1.");
+		Serial.println("ERROR: Invalid argument 1.");
 		return -1;
 	}
 	uint16_t mem_end = StrToHex(g_args[2]);
 	if (errno != 0){
-		Serial.println("Invalid argument 2.");
+		Serial.println("ERROR: Invalid argument 2.");
 		return -1;
 	}
 	uint8_t mem_data = StrToHex(g_args[3]);
 	if (errno != 0){
-		Serial.println("Invalid argument 3.");
+		Serial.println("ERROR: Invalid argument 3.");
 		return -1;
 	}
 
 	if (mem_begin > 0x7ff){
-		Serial.println("Invalid memory address.");
+		Serial.println("ERROR: Invalid memory address.");
 		return -1;
 	}
 
 	if (mem_end > 0x7ff){
-		Serial.println("Invalid size (overflow).");
+		Serial.println("ERROR: Invalid size (overflow).");
 		return -1;
 	}
 
@@ -256,7 +256,7 @@ read_line()
           Serial.println(line_string);
         }
         else{
-          Serial.println("Input string too long.");
+          Serial.println("ERROR: Input string too long.");
           g_error_flag = true;
         }
     }
@@ -277,7 +277,7 @@ parse_line()
                 g_arg_count++;
             }
             else{
-                Serial.println("Input string too long.");
+                Serial.println("ERROR: Input string too long.");
                 g_error_flag = true;
                 break;
             }
@@ -297,7 +297,7 @@ execute()
         }
     }
 
-    Serial.println("Invalid command. Type \"help\" for more.");
+    Serial.println("ERROR: command. Type \"help\" for more.");
     return 0;
 }
 

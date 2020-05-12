@@ -1,14 +1,29 @@
 #!/usr/bin/python3
 
-import serial
+# Usage dump_eeprom.py [port] [file]
 
-port = serial.Serial("/dev/ttyACM0", baudrate=115200, parity=serial.PARITY_NONE, rtscts=0,
+import serial, sys
+
+
+if len(sys.argv) != 3:
+  print("Usage : dump_eeprom.py [port] [file]")
+  exit(0)
+
+device = sys.argv[1]
+filename = sys.argv[2]
+
+
+port = serial.Serial(device, baudrate=115200, parity=serial.PARITY_NONE, rtscts=0,
 bytesize = 8)
-print(port)
+
+# Reset Arduino
+port.setDTR(False) # Drop DTR
+port.setDTR(True)  # UP the DTR back
+
 print(port.readline())
 port.write(b"read 0 7FF\n")
 
-f = open("myS3000.bin", "wb")
+f = open(filename, "wb")
 
 line = port.readline()
 line = port.readline()

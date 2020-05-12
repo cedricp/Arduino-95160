@@ -22,8 +22,6 @@ The setup function is called once at startup of the sketch
                   +----+
 */
 
-extern EEPROM_95160 eeprom;
-
 void
 setup()
 {
@@ -34,7 +32,7 @@ setup()
 // The loop function is called in an endless loop
 void loop()
 {
-	Serial.print("> ");
+	Serial.print(">");
 
 	read_line();
 	if(!get_error()){
